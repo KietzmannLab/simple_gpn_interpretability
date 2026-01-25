@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
 
+from visual_settings import PALETTE
+
 
 def _get_metric(results, model_name, key):
     d = results[model_name][key]

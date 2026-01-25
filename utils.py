@@ -1,12 +1,10 @@
 
 from datetime import datetime
-import glob
 import os
 from pathlib import Path
 import pickle
 import random
 import re
-import sys
 from matplotlib import pyplot as plt
 import numpy as np
 import torch
@@ -26,6 +24,7 @@ def create_run_folder(run_name: str | None = None, base_dir: str | Path = "outpu
     return run_dir
 
 _EPOCH_RE = re.compile(r"epoch_(\d+)\.pth$")
+
 
 def find_latest_checkpoint(run_dir: str | Path) -> Path:
     run_dir = Path(run_dir)
@@ -124,49 +123,30 @@ def plot_token_world(world, token_colors, title=None, connections=None, save=Fal
         save_plot(plt, graphs_dir, "world_grid")
 
 
-def load_world_sequences(dataset_filename="0_start_6_tokens.pkl", n_worlds=500, path=False):
-    """
-    Load serialized world sequences from a pickle file.
-
-    Parameters
-    ----------
-    dataset_filename : str
-        Either a filename (relative) or full path to the pickle.
-    n_worlds : int
-        Number of worlds to load (subset).
-    path : bool
-        If True, interpret `dataset_filename` as a full absolute path.
-    Returns
-    -------
-    dict
-        Mapping of {world: (token_seq, directions_seq)}.
-    """
-    if path:
-        world_seq_path = dataset_filename  # full absolute path provided
-    else:
-        models_dir = os.environ.get("OUTPUTS_DIR", "/share/klab/sthorat/lventura/models")
-        world_seq_path = os.path.join(models_dir, f"../sequences/{dataset_filename}")
-
-    sys.path.append("/share/klab/sthorat/lventura/gaze_integration/scripts/setup")
-
-    with open(world_seq_path, "rb") as f:
+def load_world_sequences(data_path="gaze_sequences.pkl", n_worlds=500):
+    with open(data_path, "rb") as f:
         sequences = pickle.load(f)
-
     return dict(list(sequences.items())[:n_worlds])
 
-def load_model(model, device, checkpoints_dir, checkpoint_file=None):
-    if not checkpoint_file:
-        checkpoint = max(checkpoints_dir, key=os.path.getmtime)
-    else:
-        checkpoint = os.path.join(checkpoints_dir, checkpoint_file)
 
-    print(f"loading checkpoint {checkpoint}")
-    checkpoint = torch.load(checkpoint, map_location=device, weights_only=False)
+def load_model(model, device, checkpoints_dir, checkpoint_file=None):
+    checkpoints_dir = Path(checkpoints_dir)
+
+    if checkpoint_file is None:
+        ckpts = sorted(checkpoints_dir.glob("*.pth"), key=lambda p: p.stat().st_mtime)
+        if not ckpts:
+            raise FileNotFoundError(f"No .pth checkpoints found in {checkpoints_dir.resolve()}")
+        checkpoint_path = ckpts[-1]  # latest by mtime
+    else:
+        checkpoint_path = checkpoints_dir / checkpoint_file
+        if not checkpoint_path.exists():
+            raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path.resolve()}")
+
+    print(f"loading checkpoint {checkpoint_path}")
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
 
     model.load_state_dict(checkpoint["model_state_dict"])
-    model.eval()
-    model.to(device)
+    model.eval().to(device)
     torch.set_grad_enabled(False)
-
     return model
 

@@ -1,7 +1,6 @@
 import random
 import math
 import string
-from paths import SEQUENCES_DIR
 from token_world import TokenInstance, add_token_to_seq, expand_sequence, generate_world_seq, save_list
 
 
@@ -89,8 +88,7 @@ if __name__ == "__main__":
     seq_len = 35
     continued_len = 200
 
-    title = f"changed_{seq_len}_{continued_len}"
+    title = f"change_at_{seq_len}"
     world_maps = generate_world_seq(LETTERS, (-4,4), (6,6), sequence_length=seq_len,  batch_size=1000, seq_type="gaze")
-    world_maps = change_label(world_maps, 35, 200)
-
-    save_list(world_maps, SEQUENCES_DIR, title)
+    world_maps = change_label(world_maps, seq_len, continued_len)
+    save_list(world_maps, "paper_data/sequences", title)

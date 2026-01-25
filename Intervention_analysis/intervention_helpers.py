@@ -6,11 +6,12 @@ import torch
 from accuracy_analysis import accuracy_token
 from data_processing import process_data
 from utils import save_plot
+from visual_settings import PALETTE
+import seaborn as sns
 
-
-def collect_logits_error(model,model_type,world_seq, min_step=30, max_step=None):
+def collect_logits_error(model,world_seq, min_step=30, max_step=None):
     alphabet = list("abcdefghijklmnopqrstuvwxyz")
-    tokens_tensor, directions_tensor, targets_tensor = process_data(world_seq, model_type)
+    tokens_tensor, directions_tensor, targets_tensor = process_data(world_seq)
     error_report = defaultdict(list)
     world = next(iter(world_seq.keys()))
 
@@ -92,7 +93,7 @@ def analyze_changed_errors(model, world_seqs, analysis_window=(30, 60)):
     Collects raw counts of errors for changed-token analysis.
     Returns a dictionary with raw counts for plotting later.
     """
-    error_reports = [collect_logits_error(model, "gru", {world: seqs},  analysis_window[0],  analysis_window[1]) for world, seqs in world_seqs.items()]
+    error_reports = [collect_logits_error(model, {world: seqs},  analysis_window[0],  analysis_window[1]) for world, seqs in world_seqs.items()]
 
     total_errors_all = 0
     changed_errors_all = 0
@@ -145,9 +146,9 @@ def analyze_changed_errors(model, world_seqs, analysis_window=(30, 60)):
 
 def compute_binned_accuracy(
     model,
-    model_type,
     world_seqs,
     property_fn1,
+    device,
     property_fn2=None,
     *,
     prefer="p1",   # "p1" or "p2" if both match
@@ -171,7 +172,7 @@ def compute_binned_accuracy(
 
     for world, (tokens, directions) in world_seqs.items():
         world_seq = {world: (tokens, directions)}
-        acc = accuracy_token(model, model_type, world_seq)  # assumed length == len(tokens)-1
+        acc = accuracy_token(model, device, world_seq)  # assumed length == len(tokens)-1
 
         for i in range(len(acc)):
             t_next = tokens[i + 1]
@@ -209,8 +210,6 @@ def compute_binned_accuracy(
 
     p1, ci1, n1 = _props_and_ci(correct_1, total_1)
     p2, ci2, n2 = _props_and_ci(correct_2, total_2)
-    print(f"count k:{n1}")
-    print(f"count (1,1):{n2}")
 
     return timesteps, p1, ci1, p2, ci2, n1, n2
 
@@ -218,7 +217,7 @@ def compute_binned_accuracy(
 def plot_binned_accuracy(timesteps, p_hidden, ci_hidden, p_other, ci_other, pre_expo_step=None, modification_step=None, line_label="addition",
                                  label_modified=" K tokens", label_other="Unchanged tokens",
                                  title="Accuracy per timestep", ylabel="Accuracy",
-                                 graphs_dir=GRAPHS_DIR):
+                                 graphs_dir="graphs_dir"):
     
     plt.figure(figsize=(6, 5))
     ax = plt.gca()  
@@ -342,7 +341,7 @@ def plot_changed_errors_bar(
         x - width / 2,
         old_label,
         width,
-        color=["#E74260", "#43660F"],
+        color=[PALETTE["pink"], PALETTE["green"]],
         label="Old label",
     )
 
@@ -350,9 +349,10 @@ def plot_changed_errors_bar(
         x + width / 2,
         other_label,
         width,
-        color=["#FE9670", "#78AD36"],
+        color=[PALETTE["pale_pink"], PALETTE["pale_green"]],
         label="Other labels",
     )
+
 
     # --- Axes & labels ---
     ax.set_xticks(x)

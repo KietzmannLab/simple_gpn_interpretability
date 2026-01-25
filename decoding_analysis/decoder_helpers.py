@@ -10,7 +10,7 @@ from scipy.stats import t
 import torch
 from tqdm import tqdm
 from data_processing import process_data
-from decoders import svm_label_decoder, tuple_decoder
+from decoding_analysis.decoders import svm_label_decoder, tuple_decoder
 from utils import save_plot
 
 
@@ -85,7 +85,7 @@ def collect_hidden_states(model, world_seqs, layers, baseline_model=None, device
     print("states collected")
     return batch_tokens, batch_hidden
 
-def save_results(results, tag="label_decoder", results_dir = RESULTS_DIR ):
+def save_results(results, tag="label_decoder", results_dir = "results"):
     timestamp = datetime.now().strftime("%m%d_%H%M")
     out_path = results_dir / f"{tag}_{timestamp}.pkl"
 
@@ -174,7 +174,7 @@ def run_label_decoder(models, layers, offsets, batch_hidden, world_seqs, cv_fold
     for model_name in models:
         for li, layer in enumerate(layers):
             for target_offset in offsets:
-                metric_key = f"label_{target_offset}"
+                metric_key = f"pos{target_offset}_label{target_offset}"
                 jobs.append((model_name, li, target_offset, metric_key, min_t))
 
     print(f"[INFO] Total jobs: {len(jobs)}")
@@ -211,7 +211,7 @@ def run_label_decoder(models, layers, offsets, batch_hidden, world_seqs, cv_fold
 
 def extract_label_offset(metric):
     m = re.search(r"label[_+]?(-?\d+)", metric)
-    print (metric)
+    # print (metric)
     return int(m.group(1)) if m else None
 
 

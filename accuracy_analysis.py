@@ -1,10 +1,14 @@
+from matplotlib import pyplot as plt
+import numpy as np
 import torch
+import seaborn as sns
 from data_processing import process_data
+from utils import save_plot
 
 
-def accuracy_token(model, model_type, device,  world_seq):
+def accuracy_token(model, device,  world_seq):
     # Load and prepare data
-    tokens, directions, targets = process_data(world_seq, model_type)
+    tokens, directions, targets = process_data(world_seq)
 
     # Move data to device
     tokens = tokens.to(device)
