@@ -9,9 +9,9 @@ from sklearn.calibration import Parallel, delayed
 from scipy.stats import t 
 import torch
 from tqdm import tqdm
-from data_processing import process_data
+from setup.data_processing import process_data
 from decoding_analysis.decoders import svm_label_decoder, tuple_decoder
-from utils import save_plot
+from setup.utils import save_plot
 
 
 def extract_hidden(model, world_seq, device, return_all=True):
@@ -34,7 +34,7 @@ def extract_hidden(model, world_seq, device, return_all=True):
     return hidden_states
 
 
-def collect_hidden_states(model, world_seqs, layers, baseline_model=None, device="cuda", batch_size=500,):
+def collect_hidden_states(model, world_seqs, layers, baseline_model=None, device="cpu", batch_size=500,):
     model = model.to(device).eval()
     
     if baseline_model is not None:
@@ -56,7 +56,7 @@ def collect_hidden_states(model, world_seqs, layers, baseline_model=None, device
             batch_tokens.extend([tok_seq for _, (tok_seq, _) in chunk])
 
             # model activations: dict layer -> [B,T,H] (torch on device)
-            hid_model = extract_hidden(model, "gru", seq_map, device)
+            hid_model = extract_hidden(model, seq_map, device)
 
             for layer in layers:
                 h = hid_model[layer]
@@ -85,6 +85,7 @@ def collect_hidden_states(model, world_seqs, layers, baseline_model=None, device
     print("states collected")
     return batch_tokens, batch_hidden
 
+
 def save_results(results, tag="label_decoder", results_dir = "results"):
     timestamp = datetime.now().strftime("%m%d_%H%M")
     out_path = results_dir / f"{tag}_{timestamp}.pkl"
@@ -94,6 +95,7 @@ def save_results(results, tag="label_decoder", results_dir = "results"):
 
     print(f"Saved to {out_path}")
     return out_path
+
 
 def load_results(path):
     if isinstance(path, str):

@@ -2,8 +2,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 import torch
 import seaborn as sns
-from data_processing import process_data
-from utils import save_plot
+from setup.data_processing import process_data
+from setup.utils import save_plot
 
 
 def accuracy_token(model, device,  world_seq):

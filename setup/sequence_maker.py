@@ -85,10 +85,13 @@ def change_loc_token(world_maps):
         
 if __name__ == "__main__":
 
-    seq_len = 35
-    continued_len = 200
+    seq_len = 0
+    continued_len = 100
 
-    title = f"change_at_{seq_len}"
+    title = f"pentagon_worlds"
     world_maps = generate_world_seq(LETTERS, (-4,4), (6,6), sequence_length=seq_len,  batch_size=1000, seq_type="gaze")
-    world_maps = change_label(world_maps, seq_len, continued_len)
+    # world_maps = change_label(world_maps, seq_len, continued_len)
+    # expand_sequence(world_maps, continued_len)
+    pentagon_shape(world_maps)
+    expand_sequence(world_maps, continued_len)
     save_list(world_maps, "paper_data/sequences", title)

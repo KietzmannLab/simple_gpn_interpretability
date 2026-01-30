@@ -74,11 +74,7 @@ def svm_label_decoder(
         raise ValueError("Found invalid label entries (-1). Sequence lengths likely shorter than hidden-state T.")
 
     cv = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=seed)
-    clf = LogisticRegression(
-        max_iter=max_iter,
-        solver="lbfgs",
-    )
-
+    clf = LinearSVC(C=1.0, max_iter=2000, random_state=42)
     scores = cross_val_score(clf, X, y, cv=cv, scoring="accuracy", n_jobs=1)
 
     return {

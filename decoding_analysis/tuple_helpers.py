@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from matplotlib.patches import Patch
 import numpy as np
 
-from visual_settings import PALETTE
+from setup.visual_settings import PALETTE
 
 
 def _get_metric(results, model_name, key):
@@ -133,3 +133,27 @@ def plot_pos_label_panels(results, model_name="model"):
     fig.suptitle("Tuple Decoding vs Expectation")
     fig.tight_layout(rect=[0, 0.06, 1, 1])
     return fig
+
+
+def setup_tuple(mode="tuple"):
+    # 6 positions: center + pentagon vertices
+    center = (0,0)
+    radius = 3
+    positions = [center] + [
+        (
+            round(center[0] + radius * math.cos(2 * math.pi * i / 5), 4),
+            round(center[1] + radius * math.sin(2 * math.pi * i / 5), 4),
+        )
+        for i in range(5)
+    ]
+    if mode=="tuple":
+        # (label, position) → id and id → (label, position)
+        tuple_to_id = {(label, pos): i for i, (label, pos) in enumerate(product(LETTERS, positions))}
+        index_to_tuple = {i: (label, pos) for (label, pos), i in tuple_to_id.items()}
+        return tuple_to_id, index_to_tuple
+    
+    if mode=="position":
+        pos_id = {pos: idx for idx, pos in enumerate(positions)}
+        index_to_id = {i: pos for  pos, i in pos_id.items()}
+        print(pos_id)
+        return pos_id, index_to_id

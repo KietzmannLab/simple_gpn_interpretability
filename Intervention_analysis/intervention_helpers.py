@@ -4,9 +4,9 @@ from matplotlib.patches import Patch
 import numpy as np
 import torch
 from accuracy_analysis import accuracy_token
-from data_processing import process_data
-from utils import save_plot
-from visual_settings import PALETTE
+from setup.data_processing import process_data
+from setup.utils import save_plot
+from setup.visual_settings import PALETTE
 import seaborn as sns
 
 def collect_logits_error(model,world_seq, min_step=30, max_step=None):
