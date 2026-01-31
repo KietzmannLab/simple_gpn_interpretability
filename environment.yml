@@ -1,0 +1,32 @@
+name: interpretability-env
+channels:
+- pytorch
+- nvidia
+- conda-forge
+dependencies:
+
+# Python and core
+- python=3.10.16
+- pip
+- ipykernel
+
+# Core numerics / sci
+- numpy
+- scipy
+- pandas
+- scikit-learn
+
+# Plotting / stats
+- matplotlib
+- seaborn
+- tqdm
+
+# PyTorch
+- pyyaml
+- pytorch
+- torchvision
+- pytorch-cuda=12.4
+
+- pip:
+  - interpretability==0.1.dev1+g3b3d23d
+  - wandb==0.19.0

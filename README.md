@@ -12,15 +12,24 @@ This repository is geared towards making all the code and analyses from the pape
 
 ### Environment setup  
 The code has been tested with:  
-- Python 3.9.19 + PyTorch 2.3.1 (CPU) on macOS (Apple M1)  
-- Python 3.10.12 + PyTorch 2.5.1+cu118 on a Linux HPC cluster  
+- Python 3.13.5 + PyTorch 2.10.0 (CPU) on macOS (Apple M1)  
+- Python 3.13.5 + PyTorch 2.10.0 on a Linux HPC cluster  
 
 Clone this repository (or download it directly):  
 
 ```bash  
 git clone https://github.com/KietzmannLab/simple_gpn_interpretability.git  
 cd simple_gpn_interpretability  
+```
+
+Setup your enviroment as:
+
+```bash
+conda env create -f environment.yml
+conda activate gpn
+
 ```  
 
 ### Pretrained networks and analysis data  
 1. The model, SVM results, and analysis sequences used in the paper are available under [paper_data](paper_data).  
+
