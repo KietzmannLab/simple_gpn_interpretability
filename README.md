@@ -26,7 +26,7 @@ Setup your enviroment as:
 
 ```bash
 conda env create -f environment.yml
-conda activate gpn
+conda activate interpretability
 
 ```  
 
