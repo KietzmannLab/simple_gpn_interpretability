@@ -28,6 +28,10 @@ Setup your enviroment as:
 conda env create -f environment.yml
 conda activate interpretability
 
+uncomment lines 30-32 if training is intended. For running the analysis it is not necessary. 
+
+
+
 ```  
 
 ### Pretrained networks and analysis data  

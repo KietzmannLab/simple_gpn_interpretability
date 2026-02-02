@@ -6,7 +6,7 @@ channels:
 dependencies:
 
 # Python and core
-- python=3.10.16
+- python=3.13.16
 - pip
 - ipykernel
 
@@ -27,6 +27,6 @@ dependencies:
 - torchvision
 - pytorch-cuda=12.4
 
-- pip:
-  - interpretability==0.1.dev1+g3b3d23d
-  - wandb==0.19.0
+# - pip:
+#   - interpretability==0.1.dev1+g3b3d23d
+#   - wandb==0.19.0
