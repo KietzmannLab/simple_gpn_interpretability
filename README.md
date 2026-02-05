@@ -27,8 +27,9 @@ Setup your enviroment as:
 ```bash
 conda env create -f environment.yml
 conda activate interpretability
+```
 
-uncomment lines 30-32 if training is intended. For running the analysis it is not necessary. 
+Uncomment lines 30-32 from environment.yml only if training is intended. For running analysis those packages are not necessary. 
 
 
 
