@@ -29,9 +29,7 @@ conda env create -f environment.yml
 conda activate interpretability
 ```
 
-Uncomment lines 30-32 from environment.yml only if training is intended. For running analysis those packages are not necessary. 
-
-
+Uncomment lines 30-32 from environment.yml only if training is intended. For running analysis those packages are not necessary.
 
 ```  
 
