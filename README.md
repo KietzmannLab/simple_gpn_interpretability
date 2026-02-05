@@ -29,9 +29,7 @@ conda env create -f environment.yml
 conda activate interpretability
 ```
 
-Uncomment lines 30-32 from environment.yml only if training is intended. For running analysis those packages are not necessary.
-
-```  
+Uncomment lines 30-32 from environment.yml only if training is intended. For running analysis those packages are not necessary.  
 
 ### Pretrained networks and analysis data  
 1. The model, SVM results, and analysis sequences used in the paper are available under [paper_data](paper_data).  
