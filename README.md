@@ -1,5 +1,5 @@
-# Prediction RNN Interpretability 
-Official codebase of the "Mechanisms of sequential world modeling" project. 
+# Mechanisms of sequential world modeling
+Official codebase of the GPN interpretability project. 
 This repository is geared towards making all the code and analyses from the paper (https://arxiv.org/abs/2602.03490) possible.  
 
 ## Codebase map  
