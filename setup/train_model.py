@@ -197,7 +197,7 @@ if __name__ == "__main__":
     dir_name = (f"{model_config['n_layers']}_{model_config['hidden_size']}_{time}")
     run_dir = create_run_folder("token_prediction", dir_name)
 
-     # Initialize WandB
+    # Initialize WandB
     wandb.init(
         project="token_prediction",
         name=dir_name,
